@@ -1,5 +1,7 @@
 {% extends 'layout/base.html'%}
 {% load static %}
+{% load i18n %}
+{% load my_tags %}
 {% block title %} Blog-list {% endblock %}
 {% block body_id %}blog-list-sidebar-left{% endblock %}
 {% block body_class %}blog{% endblock %}
@@ -16,18 +18,13 @@
                                 <div class="breadcrumb">
                                     <ol>
                                         <li>
-                                            <a href="#">
-                                                <span>Home</span>
+                                            <a href="{% url 'blogs:blogs_home'%}">
+                                                <span>{% trans 'Home' %}</span>
                                             </a>
                                         </li>
                                         <li>
                                             <a href="#">
-                                                <span>Living Room</span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <span>Sofa</span>
+                                                <span>{% trans 'Blogs' %}</span>
                                             </a>
                                         </li>
                                     </ol>
@@ -44,6 +41,7 @@
                                     </div>
                                     <div class="col-sm-8 col-lg-9 col-md-9 flex-xs-first main-blogs">
                                         <h2>Recent Posts</h2>
+                                    {% if blogs %}
                                         {% for blog in blogs %}
                                             <div class="list-content row">
                                                 <div class="hover-after col-md-5 col-xs-12">
@@ -60,7 +58,7 @@
                                                         <span>113 Comments</span>
                                                         <span> {{ blog.author.full_name }} </span>
                                                     </p>
-                                                    <p class="description">{{ blog.content|slice:":200" }}...
+                                                    <p class="description">{{ blog.content|striptags|slice:":200" }}...
                                                     </p>
                                                     <span class="view-more">
                                                         <a href="{% url 'blogs:detail' pk=blog.id %}">view more</a>
@@ -68,6 +66,15 @@
                                                 </div>
                                             </div>
                                         {% endfor %}
+                                    {% else %}
+                                        {% if filter_type == "category" %}
+                                            <p>No blogs found in this category.</p>
+                                        {% elif filter_type == "tag" %}
+                                            <p>No blogs found for this tag.</p>
+                                        {% else %}
+                                            <p>No blogs found.</p>
+                                        {% endif %}
+                                    {% endif %}
                                         <div class="page-list col">
                                             <ul class="justify-content-center d-flex">
                                                 <li>

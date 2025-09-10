@@ -1,4 +1,6 @@
 {% load static %}
+{% load static %}
+{% load i18n %}
 <!-- category -->
     <div class="sidebar-block">
         <div class="title-block">Categories</div>
@@ -12,18 +14,18 @@
                         <i class="zmdi zmdi-minus"></i>
                         <i class="zmdi zmdi-plus"></i>
                     </span>
-                    <a class="cateItem" href="#">{{ parent.title }}</a>
+                    <a class="cateItem" href="{% url 'blogs:blog_filter' 'category' parent.id %}">{{ parent.title }}</a>
 
                     <div class="subCategory collapse"
                         id="category{{ parent.id }}"
                         aria-expanded="true" role="status">
                         {% for child in parent.children.all %}
                             <div class="cateTitle">
-                                <a href="#" class="cateItem">{{ child.title }}</a>
+                                <a href="{% url 'blogs:blog_filter' 'category' child.id %}" class="cateItem">{{ child.title }}</a>
                             </div>
                         {% empty %}
                             <div class="cateTitle">
-                                <span class="text-muted">No subcategories</span>
+                                <span class="text-muted">{% trans 'No subcategories' %}</span>
                             </div>
                         {% endfor %}
                     </div>
@@ -35,43 +37,43 @@
 
     <!-- recent posts -->
     <div class="sidebar-block">
-        <div class="title-block">Recent Posts</div>
+        <div class="title-block">{% trans 'Recent Posts' %}</div>
         <div class="post-item-content">
             <div>
                 <div class="late-item first-child">
                     <a href="blog-detail.html">
-                        <p class="content-title">Lorem ipsum dolor sit amet</p>
+                        <p class="content-title">{% trans 'Lorem ipsum dolor sit amet' %}</p>
                     </a>
                     <span>
-                        <i class="zmdi zmdi-comments"></i>13 comment
+                        <i class="zmdi zmdi-comments"></i>{% trans '13 comment' %}
                     </span>
                     <span>
-                        <i class="zmdi zmdi-calendar-note"></i>20 APRIl 2017
+                        <i class="zmdi zmdi-calendar-note"></i>{% trans '20 APRIl 2017' %}
                     </span>
-                    <p class="description">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam
-                        nonummy...
+                    <p class="description">{% blocktrans %}Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam
+                        nonummy...{% endblocktrans %}
                     </p>
                     <p class="remove">
-                        <a href="blog-detail.html">READ MORE</a>
+                        <a href="blog-detail.html">{% trans 'READ MORE' %}</a>
                     </p>
                 </div>
             </div>
             <div>
                 <div class="late-item">
                     <a href="blog-detail.html">
-                        <p class="content-title">Lorem ipsum dolor sit amet</p>
+                        <p class="content-title">{% trans 'Lorem ipsum dolor sit amet' %}</p>
                     </a>
                     <span>
-                        <i class="zmdi zmdi-comments"></i>13 comment
+                        <i class="zmdi zmdi-comments"></i>{% trans '13 comment' %}
                     </span>
                     <span>
-                        <i class="zmdi zmdi-calendar-note"></i>20 APRIl 2017
+                        <i class="zmdi zmdi-calendar-note"></i>{% trans '20 APRIl 2017' %}
                     </span>
-                    <p class="description">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam
-                        nonummy...
+                    <p class="description">{% blocktrans %}Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam
+                        nonummy...{% endblocktrans %}
                     </p>
                     <p class="remove">
-                        <a href="blog-detail.html">READ MORE</a>
+                        <a href="blog-detail.html">{% trans 'READ MORE' %}</a>
                     </p>
                 </div>
             </div>
@@ -87,9 +89,9 @@
             <ul class="listSidebarBlog list-unstyled">
                 {% for tag in tags %}
                 <li>
-                    <a href="#" title="Show products matching tag Hot Trend">{{ tag.title }}</a>
+                    <a href="{% url 'blogs:blog_filter' 'tag' tag.id %}" title="Show products matching tag {{ tag.title }}">{{ tag.title }}</a>
                 </li>
-                    {% endfor %}
+                {% endfor %}
             </ul>
         </div>
     </div>
