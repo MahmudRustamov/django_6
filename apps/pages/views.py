@@ -1,7 +1,7 @@
 from django.shortcuts import redirect, render
-
+from django.contrib import messages
 from apps.pages.forms import ContactForm
-from apps.pages.models import ContactModel
+
 
 def home_view(request):
     return render(request, 'pages/home3.html')
@@ -11,12 +11,10 @@ def contact_page_view(request):
         form = ContactForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, "Your message sent successfully!")
+            return redirect('pages:contact')
         else:
-            context = {
-                'errors': form.errors
-            }
-            return render(request, 'pages/contact.html', context)
-        return redirect('pages:contact')
+            return render(request, 'pages/contact.html', {'errors': form.errors})
     else:
         return render(request, 'pages/contact.html')
 
@@ -26,11 +24,3 @@ def about_view(request):
 def not_found_view(request, exception=None):
     return render(request, 'pages/404.html', status=404)
 
-
-
-# def test_contact(request):
-#     form = ContactForm()
-#     context = {
-#         'form': form
-#     }
-#     return render(request, 'pages/test-contact.html', context=context)
