@@ -3,7 +3,7 @@
 {% load my_tags %}
 {% if messages %}
     {% for message in messages %}
-        {% if "logged" in message.tags %}
+        {% if "logged" in message.tags or "success" in message.tags %}
             <div class="alert alert-success">
                 {{ message }}
             </div>
