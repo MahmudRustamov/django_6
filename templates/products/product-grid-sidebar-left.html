@@ -210,7 +210,7 @@
                                                     <div class="product-miniature js-product-miniature item-one first-item">
                                                         <div class="thumbnail-container border">
                                                             {% if product.images.all %}
-                                                                <a href="{% url 'products:product_detail' product.id %}">
+                                                                <a href="{% url 'products:detail' product.id %}">
                                                                     <!-- Birinchi rasm -->
                                                                     <img class="img-fluid image-cover" src="{{ product.images.all.0.image.url }}" alt="img">
                                                                     <!-- Ikkinchi rasm (agar bo'lsa) -->
@@ -234,7 +234,7 @@
                                                         <div class="product-description">
                                                             <div class="product-groups">
                                                                 <div class="product-title">
-                                                                    <a href="{% url 'products:product_detail' product.id %}">{{ product.title }}</a>
+                                                                    <a href="{% url 'products:detail' product.id %}">{{ product.title }}</a>
                                                                 </div>
                                                                 <div class="rating">
                                                                     <div class="star-content">
