@@ -14,8 +14,14 @@ def home_view(request):
         start_time__lte=now,
         end_time__gte=now
     ).select_related("product")
+
+
+    deals_list = list(deals)
+    if deals_list:
+        deals_list = deals_list * 3
+
     context = {
-        'deals':deals,
+        'deals': deals_list,
         'banners': banners
     }
     return render(request, 'pages/home3.html', context)

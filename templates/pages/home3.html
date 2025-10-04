@@ -961,7 +961,7 @@
                         </div>
 
                         <!-- deal of the day -->
-                      <div class="section deal-of-day">
+                   <div class="section deal-of-day">
     <div class="container">
         <div class="row">
             <div class="new-arrivals prodcut-tab col">
@@ -975,14 +975,14 @@
                             <div id="deal_of_day" class="slick">
                                 {% for deal in deals %}
                                 <div class="item text-center">
-                                    <div class="product-miniature js-product-miniature item-one first-item" data-end-time="{{ deal.end_time|date:"Y/m/d H:i:s" }}">
+                                    <div class="product-miniature js-product-miniature item-one first-item">
                                         <div class="thumbnail-container">
-                                            <a href="{% url 'products:detail' deal.product.id %}">
+                                            <a href="product-detail.html">
                                                 <img class="img-fluid" src="{{ deal.display_image }}" alt="{{ deal.product.title }}">
                                             </a>
                                         </div>
                                         <div class="product-description">
-                                            <div class="d-flex justify-content-center" data-time="{{ deal.time_left.total_seconds }}">
+                                            <div class="d-flex justify-content-center" data-time="{{ deal.end_time|date:'c' }}">
                                                 <div class="days"></div>
                                                 <div class="hours"></div>
                                                 <div class="minutes"></div>
@@ -990,7 +990,7 @@
                                             </div>
                                             <div class="product-groups">
                                                 <div class="product-title">
-                                                    <a href="{% url 'products:detail' deal.product.id %}">{{ deal.product.title }}</a>
+                                                    <a href="product-detail.html">{{ deal.product.title }}</a>
                                                 </div>
                                                 <div class="product-group-price">
                                                     <span class="price">£{{ deal.deal_price }}</span>
@@ -999,7 +999,7 @@
                                             </div>
                                             <div class="product-buttons d-flex justify-content-center">
                                                 <form action="#" method="post" class="formAddToCart">
-                                                    {% csrf_token %}
+                                                    <input type="hidden" name="token">
                                                     <input type="hidden" name="id_product" value="{{ deal.product.id }}">
                                                     <a class="add-to-cart" href="#" data-button-action="add-to-cart">
                                                         <i class="fa fa-shopping-cart" aria-hidden="true"></i>
@@ -1017,7 +1017,20 @@
                                 </div>
                                 {% empty %}
                                 <div class="item text-center">
-                                    <p>No active deals right now</p>
+                                    <div class="product-miniature js-product-miniature item-one first-item">
+                                        <div class="thumbnail-container">
+                                            <a href="product-detail.html">
+                                                <img class="img-fluid" src="img/product/1.jpg" alt="img">
+                                            </a>
+                                        </div>
+                                        <div class="product-description">
+                                            <div class="product-groups">
+                                                <div class="product-title">
+                                                    <a href="product-detail.html">No deals available</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 {% endfor %}
                             </div>
@@ -1100,4 +1113,5 @@
 
 {% block extra_js %}
     <script src="{% static 'libs/slick-slider/js/slick.min.js' %}"></script>
+    <script src="{% static 'js/timemanager.js' %}"></script>
 {% endblock %}
