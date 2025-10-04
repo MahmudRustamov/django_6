@@ -1,5 +1,7 @@
 {% extends 'layout/base.html' %}
 {% load static %}
+{% load i18n %}
+{% load my_tags %}
 {% block title %}Product Detail{% endblock %}
 {% block body_id %}product-detail{% endblock %}
 {% block content %}
@@ -15,19 +17,26 @@
                                 <div class="breadcrumb">
                                     <ol>
                                         <li>
-                                            <a href="#">
-                                                <span>Home</span>
+                                            <a href="{% url 'products:home' %}">
+                                                <span>{% trans 'Home' %}</span>
                                             </a>
                                         </li>
+                                        {% if parent_category %}
                                         <li>
                                             <a href="#">
-                                                <span>Living Room</span>
+                                                <span>{{ parent_category.title }}</span>
                                             </a>
                                         </li>
+                                        {% endif %}
+                                        {% if category %}
                                         <li>
                                             <a href="#">
-                                                <span>Sofa</span>
+                                                <span>{{ category.title }}</span>
                                             </a>
+                                        </li>
+                                        {% endif %}
+                                        <li>
+                                            <span>{{ product.title }}</span>
                                         </li>
                                     </ol>
                                 </div>
@@ -342,7 +351,7 @@
                                     </div>
                                     <div class="col-sm-8 col-lg-9 col-md-9">
                                         <div class="main-product-detail">
-                                            <h2>Lorem ipsum dolor</h2>
+                                            <h2>{{ product.title }}</h2>
                                             <div class="product-single row">
                                                 <div class="product-detail col-xs-12 col-md-5 col-sm-5">
                                                     <div class="page-content" id="content">
@@ -446,33 +455,32 @@
                                                 <div class="product-info col-xs-12 col-md-7 col-sm-7">
                                                     <div class="detail-description">
                                                         <div class="price-del">
-                                                            <span class="price">£150.00</span>
+                                                            <span class="price">$ {{ product.price }}</span>
                                                             <span class="float-right">
                                                                 <span class="availb">Availability: </span>
                                                                 <span class="check">
                                                                     <i class="fa fa-check-square-o" aria-hidden="true"></i>IN STOCK</span>
                                                             </span>
                                                         </div>
-                                                        <p class="description">Proin gravida nibh vel velit auctor aliquet. Aenean lorem quis bibendum
-                                                            auctor, nisi elit consequat etiam non auctor.</p>
+                                                        <p class="description">{{ product.description }}</p>
                                                         <div class="option has-border d-lg-flex size-color">
-                                                            <div class="size">
-                                                                <span class="size">size :</span>
-                                                                <select>
-                                                                    <option value="">Choose your size</option>
-                                                                    <option value="">M</option>
-                                                                    <option value="">l</option>
-                                                                    <option value="">xl</option>
-                                                                </select>
-                                                            </div>
                                                             <div class="colors">
                                                                 <b class="title">Color : </b>
-                                                                <span class="blue"></span>
-                                                                <span class="yellow"></span>
-                                                                <span class="pink"></span>
-                                                                <span class="green"></span>
-                                                                <span class="brown"></span>
-                                                                <span class="red"></span>
+                                                                {% for color in product.colors.all %}
+                                                               <span
+                                                                    class="color-option"
+                                                                    data-color-id="{{ color.id }}"
+                                                                    style="display:inline-block;
+                                                                           width:15px;
+                                                                           height:15px;
+                                                                           border-radius:4px;
+                                                                           margin-right:8px;
+                                                                           background-color:{{ color.code }};
+                                                                           border:1px solid #ccc;
+                                                                           cursor:pointer;"
+                                                                >
+                                                                </span>
+                                                                {% endfor %}
                                                             </div>
                                                         </div>
                                                         <div class="has-border cart-area">
