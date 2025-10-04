@@ -1,10 +1,8 @@
 import threading
 from django.contrib.auth.models import User
-from django.contrib.auth.tokens import default_token_generator
 from django.shortcuts import redirect
 from django.utils.http import urlsafe_base64_decode
 from django.views import View
-
 from apps.accounts.tokens import account_activation_token
 from apps.accounts.utils import send_email_confirmation
 from django.contrib.auth import login

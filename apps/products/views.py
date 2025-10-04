@@ -1,7 +1,10 @@
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Count, Min, Max
+from django.utils import timezone
+from django.views.generic import TemplateView
 
 from .models import ProductModel, ProductCategoryModel, ManufacturerModel, ProductTagModel, ColorModel
+
 
 def product_filter_view(request, filter_type=None, pk=None):
     products = ProductModel.objects.filter(status=ProductModel.ProductStatus.PUBLISHED)
@@ -102,3 +105,5 @@ def product_filter_view(request, filter_type=None, pk=None):
 
 def product_detail_view(request):
     return render(request, 'products/product-detail.html')
+
+

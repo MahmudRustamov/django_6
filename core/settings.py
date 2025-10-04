@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'apps.blogs',
     'apps.products',
     'apps.accounts',
+    'apps.basket',
     'django_extensions',
     'ckeditor',
     'ckeditor_uploader',
@@ -156,4 +157,8 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'rustamov.mahmud.05@gmail.com'
 EMAIL_HOST_PASSWORD = 'swzk rcmr hoer xxnw'
+
+BASKET_SESSION_ID = 'basket'
+SESSION_COOKIE_AGE = 86400
+SESSION_SAVE_EVERY_REQUEST = True
 

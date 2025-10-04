@@ -1,10 +1,25 @@
 from django.shortcuts import redirect, render
 from django.contrib import messages
+from django.utils import timezone
+
 from apps.pages.forms import ContactForm
+from apps.pages.models import BannerModel
+from apps.products.models import DealOfTheDayModel
 
 
 def home_view(request):
-    return render(request, 'pages/home3.html')
+    banners = BannerModel.objects.all()
+    now = timezone.now()
+    deals = DealOfTheDayModel.objects.filter(
+        start_time__lte=now,
+        end_time__gte=now
+    ).select_related("product")
+    context = {
+        'deals':deals,
+        'banners': banners
+    }
+    return render(request, 'pages/home3.html', context)
+
 
 def contact_page_view(request):
     if request.method == "POST":
