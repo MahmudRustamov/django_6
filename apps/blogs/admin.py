@@ -1,6 +1,5 @@
 from django.contrib import admin
 from modeltranslation.admin import TranslationAdmin
-
 from apps.blogs.models import BlogCategoryModel, BlogTagModel, BlogAuthorModel, BlogModel, BlogViewModel
 
 class MyTranslationAdmin(TranslationAdmin):
@@ -13,6 +12,7 @@ class MyTranslationAdmin(TranslationAdmin):
         css = {
             'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
         }
+
 
 @admin.register(BlogCategoryModel)
 class BlogCategoryModelAdmin(MyTranslationAdmin):

@@ -1,5 +1,4 @@
 from django.contrib import admin
-
 from django.contrib import admin
 from .models import OrderModel, OrderItemModel
 
@@ -20,7 +19,6 @@ class OrderAdmin(admin.ModelAdmin):
     inlines = [OrderItemInline]
 
     def has_add_permission(self, request):
-        # Prevent manual order creation — orders should come from checkout
         return False
 
 
@@ -29,3 +27,4 @@ class OrderItemAdmin(admin.ModelAdmin):
     list_display = ('id', 'order', 'product', 'quantity', 'price')
     readonly_fields = ('order', 'product', 'quantity', 'price', 'created_at', 'updated_at')
     search_fields = ('order__unique_id', 'product__title')
+

@@ -51,6 +51,7 @@
                                         {% include 'blogs/blog-sidebar.html' %}
 
                                     </div>
+                                    {% for blog in blogs %}
                                     <div class="col-sm-8 col-lg-9 col-md-9 flex-xs-first main-blogs">
                                         <h3>{{ blog.title }}</h3>
                                         <div class="hover-after">
@@ -78,26 +79,6 @@
                                                         <span>{% trans 'Print' %}</span>
                                                     </a>
                                                 </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="admin">
-                                            <img src="{% static 'img/blog/user.jpg' %}" alt="img" class="float-left right">
-                                            <div class="info">
-                                                <p>
-                                                    <a href="#">
-                                                        <span class="content-title">
-                                                            {% trans 'Home' %}John doe
-                                                        </span>
-                                                    </a>
-                                                    <span>{% trans 'Administrator, Web Designer' %}</span>
-                                                </p>
-                                                <p class="descript">
-                                                    {% blocktrans %}
-                                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                                                    do eiusmod tempor incididunt. ut labore et dolore magna aliqua.
-                                                    {% endblocktrans %}
-                                                </p>
                                             </div>
                                         </div>
                                         <div class="related">
@@ -216,6 +197,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                {% endfor %}
                                 </div>
                             </div>
                         </div>

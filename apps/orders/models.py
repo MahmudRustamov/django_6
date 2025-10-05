@@ -42,3 +42,5 @@ class OrderItemModel(BaseModel):
         verbose_name = 'order item'
         verbose_name_plural = 'order items'
 
+
+
