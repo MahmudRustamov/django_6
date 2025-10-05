@@ -36,13 +36,12 @@
             <!-- search -->
             <div id="mobile_search" class="d-flex">
                 <div id="mobile_search_content">
-                    <form method="get" action="#">
-
-                        <input type="text" name="s" value="" placeholder="{% trans 'Search' %}">
-                        <button type="submit">
-                            <i class="fa fa-search"></i>
-                        </button>
-                    </form>
+                    <form method="get" action="{% url 'products:search' %}">
+                            <input type="text" name="s" value="{{ search_query|default:'' }}" placeholder="Search products..." class="ui-autocomplete-input" autocomplete="off">
+                            <button type="submit">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </form>
                 </div>
                 <div class="desktop_cart">
                     <div class="blockcart block-cart cart-preview tiva-toggle">

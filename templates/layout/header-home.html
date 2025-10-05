@@ -335,11 +335,10 @@
 
                     <!-- search -->
                     <div id="search_widget" class="col-sm-4 col-md-3 align-items-center justify-content-start d-flex">
-                        <form method="get" action="#">
-
+                       <form method="get" action="{% url 'products:search' %}">
                             <span role="status" aria-live="polite" class="ui-helper-hidden-accessible"></span>
-                            <input type="text" name="s" value="" placeholder="{% trans 'Search' %}" class="ui-autocomplete-input" autocomplete="off">
-                            <button type="button">
+                            <input type="text" name="s" value="{{ search_query|default:'' }}" placeholder="{% trans 'Search' %}" class="ui-autocomplete-input" autocomplete="off">
+                            <button type="submit">
                                 <i class="fa fa-search"></i>
                             </button>
                         </form>

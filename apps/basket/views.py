@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import render
 
 from django.contrib import messages
@@ -21,8 +22,8 @@ def basket_add(request, product_id):
     """
     basket = Basket(request)
     product = get_object_or_404(ProductModel, id=product_id)
-
-    basket.add(product=product, quantity=1)
+    quantity = int(request.POST.get('qty', 1))
+    basket.add(product=product, quantity=quantity)
     messages.success(request, f'{product.title} added to your basket!')
     return redirect('products:home')
 
@@ -35,4 +36,33 @@ def basket_remove(request, product_id):
     product = get_object_or_404(ProductModel, id=product_id)
     basket.remove(product)
     messages.success(request, f'{product.title} removed from your basket!')
+    referer = request.META.get('HTTP_REFERER')
+    if referer:
+        return redirect(referer)
     return redirect('products:home')
+
+
+# def basket_update(request, product_id):
+#     """
+#     Update product quantity in basket.
+#     """
+#     basket = Basket(request)
+#     product = get_object_or_404(ProductModel, id=product_id)
+#     quantity = int(request.POST.get('qty', 1))
+#
+#     basket.add(product=product, quantity=quantity, update_quantity=True)
+#     messages.success(request, f'{product.title} quantity updated!')
+#     return redirect('basket:detail')
+
+def basket_update(request, product_id):
+    if request.method == 'POST':
+        basket = Basket(request)
+        product = get_object_or_404(ProductModel, id=product_id)
+        quantity = int(request.POST.get('qty', 1))
+
+        basket.add(product=product, quantity=quantity, update_quantity=True)
+
+        return JsonResponse({
+            'success': True,
+            'quantity': quantity
+        })

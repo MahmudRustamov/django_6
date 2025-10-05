@@ -67,18 +67,21 @@
                                                             <div class="row">
                                                                 <div class="col-md-5 col qty">
                                                                     <div class="label">Qty:</div>
+                                                                   <form action="{% url 'basket:basket_update' product.id %}" method="post" style="display: inline;">
+                                                                    {% csrf_token %}
                                                                     <div class="quantity">
-                                                                        <input type="text" name="qty" value="1" class="input-group form-control">
+                                                                        <input type="text" name="qty" value="{{ item.quantity }}" id="quantity_{{ product.id }}" class="input-group form-control quantity-input" data-product-id="{{ product.id }}" readonly>
 
                                                                         <span class="input-group-btn-vertical">
-                                                                            <button class="btn btn-touchspin js-touchspin bootstrap-touchspin-up" type="button">
+                                                                            <button class="btn btn-touchspin js-touchspin bootstrap-touchspin-up" type="button" data-product-id="{{ product.id }}">
                                                                                 +
                                                                             </button>
-                                                                            <button class="btn btn-touchspin js-touchspin bootstrap-touchspin-down" type="button">
+                                                                            <button class="btn btn-touchspin js-touchspin bootstrap-touchspin-down" type="button" data-product-id="{{ product.id }}">
                                                                                 -
                                                                             </button>
                                                                         </span>
                                                                     </div>
+                                                                </form>
                                                                 </div>
                                                                 <div class="col-md-5 col price">
                                                                     <div class="label">Total:</div>
@@ -101,7 +104,7 @@
                                             </ul>
                                         </div>
                                     </div>
-                                    <a href="product-checkout.html" class="continue btn btn-primary pull-xs-right">
+                                    <a href="#" class="continue btn btn-primary pull-xs-right">
                                         Continue
                                     </a>
                                 </div>
