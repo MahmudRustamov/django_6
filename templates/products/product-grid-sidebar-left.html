@@ -371,8 +371,18 @@
                                                                             <div class="product-title">
                                                                                 <a href="{% url 'products:detail' pk=product.id %}">{{ product.title }}</a>
                                                                                 <span class="info-stock">
-                                                                                    <i class="fa fa-check-square-o" aria-hidden="true"></i>
-                                                                                    {% trans '' %}In Stock
+                                                                                    <span class="availb">Availability: </span>
+                                                                                    {% if product.stock|add:0 > 0 %}
+                                                                                    <span class="check">
+                                                                                        <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                                                                                        IN STOCK ({{ product.stock }})
+                                                                                    </span>
+                                                                                    {% else %}
+                                                                                        <span class="availb text-danger" style="font-weight:600;">
+                                                                                        <i class="fa fa-times-circle" aria-hidden="true"></i>
+                                                                                        OUT OF STOCK
+                                                                                    </span>
+                                                                                    {% endif %}
                                                                                 </span>
                                                                             </div>
 
