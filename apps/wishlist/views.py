@@ -27,5 +27,15 @@ def wishlist_list(request):
     return render(request, 'auth/user-wishlist.html', {'items': items})
 
 
-def in_wishlist(self, product_id):
-    return str(product_id) in self.basket.keys()
+@login_required
+def in_wishlist(request, pk):
+    product = get_object_or_404(ProductModel, id=pk)
+
+    is_in_wishlist = WishlistModel.in_wishlist(request.user, product.id)
+
+    context = {
+        'product': product,
+        'is_in_wishlist': is_in_wishlist,
+    }
+    return render(request, 'products/product-detail.html', context)
+

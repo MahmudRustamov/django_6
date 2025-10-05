@@ -39,46 +39,45 @@
                                     <h1 class="title-page">{% trans 'My Wishlists' %}</h1>
                                     <div id="block-history" class="block-center">
                                         {% if items %}
-                                        <table class="std table">
+                                        <table class="std table table-striped">
                                             <thead>
                                                 <tr>
-                                                    <th class="first_item">Image</th>
-                                                    <th class="item">Product Name</th>
-                                                    <th class="item mywishlist_first">Price</th>
-                                                    <th class="item mywishlist_second">Added Date</th>
-                                                    <th class="item mywishlist_second">Action</th>
-                                                    <th class="last_item mywishlist_first">Delete</th>
+                                                    <th class="first_item text-center align-middle">Image</th>
+                                                    <th class="item text-center align-middle">Product Name</th>
+                                                    <th class="item mywishlist_first text-center align-middle">Price</th>
+                                                    <th class="item mywishlist_second text-center align-middle">Added Date</th>
+                                                    <th class="item mywishlist_second text-center align-middle" colspan="2">Actions</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 {% for item in items %}
                                                 <tr id="wishlist_{{ item.id }}">
-                                                    <td>
+                                                    <td class="text-center align-middle">
                                                         <a href="{% url 'products:detail' item.product.id %}">
                                                             {% if item.product.images.first %}
-                                                            <img src="{{ item.product.images.first.image.url }}" alt="{{ item.product.title }}" style="width: 80px; height: 80px; object-fit: cover;">
+                                                            <img src="{{ item.product.images.first.image.url }}" alt="{{ item.product.title }}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 5px;">
                                                             {% else %}
-                                                            <img src="{% static 'img/product/default.jpg' %}" alt="{{ item.product.title }}" style="width: 80px; height: 80px; object-fit: cover;">
+                                                            <img src="{% static 'img/product/default.jpg' %}" alt="{{ item.product.title }}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 5px;">
                                                             {% endif %}
                                                         </a>
                                                     </td>
-                                                    <td>
-                                                        <a href="{% url 'products:detail' item.product.id %}">
+                                                    <td class="text-center align-middle">
+                                                        <a href="{% url 'products:detail' item.product.id %}" style="font-weight: 500; color: #333;">
                                                             {{ item.product.title }}
                                                         </a>
                                                     </td>
-                                                    <td>£{{ item.product.price }}</td>
-                                                    <td>{{ item.created_at|date:"Y-m-d" }}</td>
-                                                    <td>
-                                                        <a href="{% url 'products:detail' item.product.id %}" class="btn btn-primary btn-sm">
+                                                    <td class="text-center align-middle" style="font-weight: 600; color: #e74c3c;">£{{ item.product.price }}</td>
+                                                    <td class="text-center align-middle">{{ item.created_at|date:"Y-m-d" }}</td>
+                                                    <td class="text-center align-middle">
+                                                        <a href="{% url 'products:detail' item.product.id %}" class="btn btn-primary">
                                                             <i class="fa fa-eye" aria-hidden="true"></i>
                                                             View
                                                         </a>
                                                     </td>
-                                                    <td class="wishlist_delete">
+                                                   <td class="wishlist_delete text-center align-middle">
                                                         <form action="{% url 'wishlist:wishlist_remove' item.product.id %}" method="post" style="display: inline;">
                                                             {% csrf_token %}
-                                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Do you really want to remove this item from wishlist?');">
+                                                            <button type="submit" class="btn btn-danger" style="padding: 6px 12px; font-size: 14px; min-width: 80px;" onclick="return confirm('Do you really want to remove this item from wishlist?');">
                                                                 <i class="fa fa-trash" aria-hidden="true"></i>
                                                                 Delete
                                                             </button>
@@ -99,7 +98,7 @@
                                         {% endif %}
                                     </div>
                                     <div class="page-home">
-                                        <a class="btn btn-default" href="{% url 'products:home' %}">
+                                        <a class="btn btn-default" href="{% url 'pages:home' %}">
                                             <i class="fa fa-home" aria-hidden="true"></i>
                                             <span>{% trans 'Homepage' %}</span>
                                         </a>
