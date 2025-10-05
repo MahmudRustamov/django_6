@@ -35,4 +35,4 @@ def basket_remove(request, product_id):
     product = get_object_or_404(ProductModel, id=product_id)
     basket.remove(product)
     messages.success(request, f'{product.title} removed from your basket!')
-    return redirect('basket:detail')
+    return redirect('products:home')

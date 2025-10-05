@@ -304,7 +304,24 @@
                                                                 </div>
                                                             </div>
                                                             <div class="product-buttons d-flex justify-content-center">
+                                                                {% in_basket request product.id as is_true  %}
+                                                                {% if is_true %}
+                                                                <form action="{% url 'basket:basket_remove' product.id %}" method="post" class="formAddToCart">
+                                                                {% csrf_token %}
+                                                                <input type="hidden" name="id_product" value="{{ product.id }}">
+                                                                <button type="submit" class="add-to-cart" data-button-action="remove-from-cart">
+                                                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                                                </button>
+                                                                </form>
+                                                                <a class="addToWishlist" href="#" data-rel="{{ product.id }}" onclick="">
+                                                                    <i class="fa fa-heart" aria-hidden="true"></i>
+                                                                </a>
+                                                                <a href="{% url 'basket:detail' %}" class="quick-view hidden-sm-down" data-link-action="quickview">
+                                                                    <i class="fa fa-eye" aria-hidden="true"></i>
+                                                                </a>
+                                                                {% else %}
                                                                 <form action="#" method="post" class="formAddToCart">
+                                                                    {% csrf_token %}
                                                                     <input type="hidden" name="id_product" value="{{ product.id }}">
                                                                     <a class="add-to-cart" href="{% url 'basket:basket_add' product.id %}" data-button-action="add-to-cart">
                                                                         <i class="fa fa-shopping-cart" aria-hidden="true"></i>
@@ -315,17 +332,6 @@
                                                                 </a>
                                                                 <a href="{% url 'basket:detail' %}" class="quick-view hidden-sm-down" data-link-action="quickview">
                                                                     <i class="fa fa-eye" aria-hidden="true"></i>
-                                                                </a>
-                                                                {% in_basket request product.id as is_true  %}
-                                                                {% if is_true %}
-                                                                <form action="#" method="post" class="formAddToCart">
-                                                                    <input type="hidden" name="id_product" value="{{ product.id }}">
-                                                                    <a class="add-to-cart" href="{% url 'basket:basket_remove' product.id %}" data-button-action="add-to-cart">
-                                                                        <i class="fa fa-shopping-cart" aria-hidden="true"></i>
-                                                                    </a>
-                                                                </form>
-                                                                <a class="addToWishlist" href="#" data-rel="{{ product.id }}" onclick="">
-                                                                    <i class="fa fa-heart" aria-hidden="true"></i>
                                                                 </a>
                                                                 {% endif %}
                                                             </div>

@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'apps.products',
     'apps.accounts',
     'apps.basket',
+    'apps.wishlist',
     'django_extensions',
     'ckeditor',
     'ckeditor_uploader',

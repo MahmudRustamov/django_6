@@ -1,7 +1,6 @@
 from django.views.generic import ListView, DetailView, CreateView
 from django.shortcuts import get_object_or_404, redirect
 from django.db.models import Count, Min, Max
-from django.urls import reverse
 from .models import (
     ProductModel,
     ProductCategoryModel,
@@ -141,3 +140,4 @@ class CommentCreateView(CreateView):
         form.instance.product = product
         form.save()
         return redirect('products:detail', pk=product.pk)
+
