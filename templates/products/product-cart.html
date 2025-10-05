@@ -1,5 +1,6 @@
 {% extends 'layout/base.html' %}
 {% load static %}
+{% load i18n %}
 {% load my_tags %}
 {% block title %}Shopping Cart{% endblock %}
 {% block body_class %}product-cart checkout-cart blog{% endblock %}
@@ -137,7 +138,7 @@
                                         </div>
                                         <div class="cart-summary-line" id="cart-subtotal-products">
                                             <span class="label js-subtotal">Total products:</span>
-                                            <span class="value" id="cart-total-price">$ {{ basket.get_total_price }}</span>
+                                            <span class="value" id="cart-total-price">{{ basket|length }}</span>
                                         </div>
                                         <div class="cart-summary-line" id="cart-subtotal-shipping">
                                             <span class="label">Total Shipping:</span>
@@ -150,7 +151,7 @@
                                     </div>
 
                                     {% if basket %}
-                                    <a href="#" class="btn btn-primary btn-block" style="margin-top:20px;">Proceed to Checkout</a>
+                                    <a href="{% url 'orders:create' %}" class="btn btn-primary btn-block" style="margin-top:20px;">{% trans 'Proceed to Checkout' %}</a>
                                     {% endif %}
                                 </div>
 

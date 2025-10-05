@@ -68,3 +68,6 @@ class CheckoutCreateView(LoginRequiredMixin, TemplateView):
 
         messages.success(request, "Your order has been successfully placed ✅")
         return redirect('products:home')
+
+
+
