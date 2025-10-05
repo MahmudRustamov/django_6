@@ -42,8 +42,12 @@
                                                         <!--  product left content: image-->
                                                         <div class="product-line-grid-left col-md-2">
                                                             <span class="product-image media-middle">
-                                                                <a href="product-detail.html">
-                                                                    <img class="img-fluid" src="{{ item.product.image.url }}" alt="{{ item.product.title }}">
+                                                                <a href="{% url 'products:detail' item.product.id %}">
+                                                                    {% if item.image %}
+                                                                        <img class="img-fluid" src="{{ item.image }}" alt="{{ item.product.title }}">
+                                                                    {% else %}
+                                                                        <img class="img-fluid" src="{% static 'img/no-image.png' %}" alt="No image">
+                                                                    {% endif %}
                                                                 </a>
                                                             </span>
                                                         </div>
@@ -79,7 +83,7 @@
                                                                 <div class="col-md-5 col price">
                                                                     <div class="label">Total:</div>
                                                                     <div class="product-price total">
-                                                                        £20.00
+                                                                        {{ item.total_price }}
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-2 col text-xs-right align-self-end">
