@@ -67,7 +67,7 @@
                                                             <div class="row">
                                                                 <div class="col-md-5 col qty">
                                                                     <div class="label">Qty:</div>
-                                                                   <form action="{% url 'basket:basket_update' product.id %}" method="post" style="display: inline;">
+                                                                   <form action="{% url 'basket:basket_update' item.product.id %}" method="post" style="display: inline;">
                                                                     {% csrf_token %}
                                                                     <div class="quantity">
                                                                         <input type="text" name="qty" value="{{ item.quantity }}" id="quantity_{{ product.id }}" class="input-group form-control quantity-input" data-product-id="{{ product.id }}" readonly>
@@ -165,4 +165,7 @@
             </div>
         </div>
     </div>
+{% endblock %}
+{% block extra_js %}
+    <script src="{% static 'js/mainn.js' %}"></script>
 {% endblock %}
