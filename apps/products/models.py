@@ -134,6 +134,19 @@ class DealOfTheDayModel(BaseModel):
         verbose_name_plural = 'deals'
 
 
+class CommentModel(BaseModel):
+    name = models.CharField(max_length=128)
+    email = models.EmailField()
+    comment = models.TextField()
+
+    def __str__(self):
+        return self.email
+
+    class Meta:
+        verbose_name = 'comment'
+        verbose_name_plural = 'comments'
+
+
 
 
 

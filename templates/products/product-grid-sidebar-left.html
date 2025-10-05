@@ -39,65 +39,92 @@
                                     <div class="sidebar-3 sidebar-collection col-lg-3 col-md-4 col-sm-4">
 
                                         <!-- category menu -->
-                                        <div class="sidebar-block">
+                                         <div class="sidebar-block">
                                             <div class="title-block">{% trans 'Categories' %}</div>
                                             <div class="block-content">
+
+                                                {% if empty_message %}
+                                                  <div style="text-align:center; padding: 30px; color: #999; font-size: 18px;">
+                                                    {{ empty_message }}
+                                                  </div>
+                                                {% endif %}
+
                                                 {% for parent in parent_categories %}
                                                 <div class="cateTitle hasSubCategory open level1">
-                                                    <span class="arrow collapsed collapse-icons" data-toggle="collapse" data-target="#{{ parent.id }}" aria-expanded="false" role="status">
+                                                    <span class="arrow collapsed collapse-icons"
+                                                          data-toggle="collapse"
+                                                          data-target="#cat{{ parent.id }}"
+                                                          aria-expanded="false"
+                                                          role="status">
                                                         <i class="zmdi zmdi-minus"></i>
                                                         <i class="zmdi zmdi-plus"></i>
                                                     </span>
-                                                    <a class="cateItem" href="{% url 'products:filter' 'category' parent.id %}">{{ parent.title }}</a>
-                                                    <div class="subCategory collapse" id="{{ parent.id }}" aria-expanded="true" role="status">
-                                                         {% for child in parent.children.all %}
-                                                        <div class="cateTitle">
-                                                            <a href="{% url 'products:filter' 'category' child.id %}" class="cateItem">{{ child.title }}</a>
-                                                        </div>
-                                                         {% empty %}
+
+                                                    {# 🔹 Parent link barcha GET parametrlardan foydalanadi #}
+                                                    <a class="cateItem"
+                                                       href="{% url 'products:filter' 'category' parent.id %}?{{ request.GET.urlencode }}">
+                                                        {{ parent.title }}
+                                                    </a>
+
+                                                    <div class="subCategory collapse" id="cat{{ parent.id }}" aria-expanded="true" role="status">
+                                                        {% for child in parent.children.all %}
+                                                            <div class="cateTitle">
+                                                                {# 🔹 Child link ham GET parametrlarni saqlaydi #}
+                                                                <a href="{% url 'products:filter' 'category' child.id %}?{{ request.GET.urlencode }}"
+                                                                   class="cateItem">
+                                                                    {{ child.title }}
+                                                                </a>
+                                                            </div>
+                                                        {% empty %}
                                                             <div class="cateTitle">
                                                                 <span class="text-muted">{% trans 'No subcategories' %}</span>
                                                             </div>
                                                         {% endfor %}
                                                     </div>
-
                                                 </div>
                                                 {% endfor %}
                                             </div>
                                         </div>
-                                        <!-- best seller -->
+
                                         <!-- Catalog -->
                                         <div class="sidebar-block">
                                             <div class="title-block">{% trans 'Catalog' %}</div>
-                                            <form method="get">
-                                                <!-- Sub Categories -->
+
+                                                <form method="get">
+
+                                                <!-- 🔹 Categories -->
                                                 <div class="new-item-content">
                                                     <h3 class="title-product">{% trans 'Categories' %}</h3>
                                                     <ul class="scroll-product">
                                                         {% for child in child_categories %}
                                                         <li>
                                                             <label class="check">
-                                                                <input type="checkbox" name="child" value="{{ child.id }}"
+                                                                <input type="checkbox"
+                                                                       name="category"
+                                                                       value="{{ child.id }}"
                                                                        onchange="this.form.submit()"
-                                                                       {% if child.id in selected_child_ids %}checked{% endif %}>
+                                                                       {% if child.id in selected_categories %}checked{% endif %}>
                                                                 <span class="checkmark"></span>
                                                             </label>
                                                             <b>{{ child.title }}</b>
-                                                            <span class="quantity">({{ child.product_count }})</span>
+                                                            <span class="quantity">({{ child.products.count }})</span>
                                                         </li>
                                                         {% empty %}
                                                         <li><span class="text-muted">{% trans 'No subcategories' %}</span></li>
                                                         {% endfor %}
                                                     </ul>
                                                 </div>
-                                                <!-- Manufacturer -->
+
+                                                <!-- 🔹 Manufacturers -->
                                                 <div class="new-item-content">
                                                     <h3 class="title-product">{% trans 'Manufacturer' %}</h3>
                                                     <ul class="scroll-product">
                                                         {% for manufacturer in manufacturers %}
                                                         <li>
                                                             <label class="check">
-                                                                <input type="checkbox" name="manufacturer" value="{{ manufacturer.id }}"
+                                                                <input type="checkbox"
+                                                                       name="manufacturer"
+                                                                       value="{{ manufacturer.id }}"
                                                                        onchange="this.form.submit()"
                                                                        {% if manufacturer.id in selected_manufacturers %}checked{% endif %}>
                                                                 <span class="checkmark"></span>
@@ -106,26 +133,32 @@
                                                             <span class="quantity">({{ manufacturer.products.count }})</span>
                                                         </li>
                                                         {% empty %}
-                                                            <li><span class="text-muted"> {% trans 'No manufacturers' %}</span></li>
+                                                        <li><span class="text-muted">{% trans 'No manufacturers' %}</span></li>
                                                         {% endfor %}
                                                     </ul>
                                                 </div>
 
-                                                <!-- Color -->
+                                                <!-- 🔹 Colors -->
                                                 <div class="new-item-content">
                                                     <h3 class="title-product">{% trans 'Color' %}</h3>
                                                     <ul class="scroll-product">
                                                         {% for color in colors %}
                                                         <li>
                                                             <label class="check">
-                                                                <input type="checkbox" name="color" value="{{ color.id }}"
+                                                                <input type="checkbox"
+                                                                       name="color"
+                                                                       value="{{ color.id }}"
                                                                        onchange="this.form.submit()"
                                                                        {% if color.id in selected_colors %}checked{% endif %}>
                                                                 <span class="checkmark"></span>
                                                             </label>
-                                                            <span style="display:inline-block;width:15px;height:15px;
-                                                                         border-radius:50%;background-color:{{ color.code }};
-                                                                         border:1px solid #ccc;margin-right:5px;">
+                                                            <span style="display:inline-block;
+                                                                         width:15px;
+                                                                         height:15px;
+                                                                         border-radius:50%;
+                                                                         background-color:{{ color.code }};
+                                                                         border:1px solid #ccc;
+                                                                         margin-right:5px;">
                                                             </span>
                                                             <b>{{ color.title }}</b>
                                                             <span class="quantity">({{ color.products.count }})</span>
@@ -135,21 +168,45 @@
                                                         {% endfor %}
                                                     </ul>
                                                 </div>
-                                                <!-- Price Filter (slider) -->
-                                                <div class="tiva-filter-price new-item-content sidebar-block">
-                                                    <h3 class="title-product">{% trans 'By Price' %}</h3>
-                                                    <div id="block_price_filter" class="block">
-                                                        <div class="block-content">
-                                                            <div id="slider-range" class="tiva-filter">
-                                                                <div class="filter-itemprice-filter">
-                                                                    <div class="layout-slider">
-                                                                        <input id="price-filter" name="price" value="{{ request.GET.price|default:'0;100' }}" onchange="this.form.submit()" />
-                                                                    </div>
-                                                                    <div class="layout-slider-settings"></div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+
+                                                <!-- 🔹 Tags -->
+                                                <div class="new-item-content">
+                                                    <h3 class="title-product">{% trans 'Tags' %}</h3>
+                                                    <ul class="scroll-product">
+                                                        {% for tag in tags %}
+                                                        <li>
+                                                            <label class="check">
+                                                                <input type="checkbox"
+                                                                       name="tag"
+                                                                       value="{{ tag.id }}"
+                                                                       onchange="this.form.submit()"
+                                                                       {% if tag.id in selected_tags %}checked{% endif %}>
+                                                                <span class="checkmark"></span>
+                                                            </label>
+                                                            <b>{{ tag.title }}</b>
+                                                            <span class="quantity">({{ tag.products.count }})</span>
+                                                        </li>
+                                                        {% empty %}
+                                                        <li><span class="text-muted">{% trans 'No tags' %}</span></li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
+
+                                                <!-- 🔹 Price filter -->
+                                                <div class="tiva-filter-price new-item-content sidebar-block"
+                                                     style="background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 20px;">
+                                                    <h3 class="title-product" style="font-size: 18px; font-weight: bold; color: #333; margin-bottom: 15px;">
+                                                        {% trans 'By Price' %}
+                                                    </h3>
+                                                    <select name="price" onchange="this.form.submit()"
+                                                            style="width: 100%; padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px;">
+                                                        <option value="">{% trans 'Select price range' %}</option>
+                                                        <option value="0;1000" {% if request.GET.price == '0;1000' %}selected{% endif %}>$0 - $1000</option>
+                                                        <option value="1000;2000" {% if request.GET.price == '1000;2000' %}selected{% endif %}>$1000 - $2000</option>
+                                                        <option value="2000;5000" {% if request.GET.price == '2000;5000' %}selected{% endif %}>$2000 - $5000</option>
+                                                        <option value="5000;10000" {% if request.GET.price == '5000;10000' %}selected{% endif %}>$5000 - $10000</option>
+                                                        <option value="10000;999999" {% if request.GET.price == '10000;999999' %}selected{% endif %}>$10000+</option>
+                                                    </select>
                                                 </div>
                                             </form>
                                         </div>
@@ -183,21 +240,7 @@
                                                         </li>
                                                     </ul>
                                                     <div class="hidden-sm-down total-products">
-                                                        <p>{% trans 'There are 12 products.' %}</p>
-                                                    </div>
-                                                </div>
-                                                <div class="col col-xs-12">
-                                                    <div class="d-flex sort-by-row justify-content-lg-end justify-content-md-end">
-
-                                                        <div class="products-sort-order dropdown">
-                                                            <select class="select-title">
-                                                                <option value="">{% trans 'Sort by' %}</option>
-                                                                <option value="">{% trans 'Name, A to Z' %}</option>
-                                                                <option value="">{% trans 'Name, Z to A' %}</option>
-                                                                <option value="">{% trans 'Price, low to high' %}</option>
-                                                                <option value="">{% trans 'Price, high to low' %}</option>
-                                                            </select>
-                                                        </div>
+                                                        <p>{% trans 'There are ' %} {{ page_obj.paginator.count }} {% trans 'products' %}</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -205,6 +248,11 @@
                                         <div class="tab-content product-items">
                                             <div id="grid" class="related tab-pane fade in active show">
                                             <div class="row">
+                                                {% if empty_message %}
+                                                    <div style="text-align:center; padding: 40px; color: #999; font-size: 18px;">
+                                                        {{ empty_message }}
+                                                    </div>
+                                                {% endif %}
                                                 {% for product in products %}
                                                 <div class="item text-center col-md-4">
                                                     <div class="product-miniature js-product-miniature item-one first-item">
@@ -258,16 +306,28 @@
                                                             <div class="product-buttons d-flex justify-content-center">
                                                                 <form action="#" method="post" class="formAddToCart">
                                                                     <input type="hidden" name="id_product" value="{{ product.id }}">
-                                                                    <a class="add-to-cart" href="#" data-button-action="add-to-cart">
+                                                                    <a class="add-to-cart" href="{% url 'basket:basket_add' product.id %}" data-button-action="add-to-cart">
                                                                         <i class="fa fa-shopping-cart" aria-hidden="true"></i>
                                                                     </a>
                                                                 </form>
                                                                 <a class="addToWishlist" href="#" data-rel="{{ product.id }}" onclick="">
                                                                     <i class="fa fa-heart" aria-hidden="true"></i>
                                                                 </a>
-                                                                <a href="#" class="quick-view hidden-sm-down" data-link-action="quickview">
+                                                                <a href="{% url 'basket:detail' %}" class="quick-view hidden-sm-down" data-link-action="quickview">
                                                                     <i class="fa fa-eye" aria-hidden="true"></i>
                                                                 </a>
+                                                                {% in_basket request product.id as is_true  %}
+                                                                {% if is_true %}
+                                                                <form action="#" method="post" class="formAddToCart">
+                                                                    <input type="hidden" name="id_product" value="{{ product.id }}">
+                                                                    <a class="add-to-cart" href="{% url 'basket:basket_remove' product.id %}" data-button-action="add-to-cart">
+                                                                        <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                                                                    </a>
+                                                                </form>
+                                                                <a class="addToWishlist" href="#" data-rel="{{ product.id }}" onclick="">
+                                                                    <i class="fa fa-heart" aria-hidden="true"></i>
+                                                                </a>
+                                                                {% endif %}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -278,750 +338,131 @@
 
                                             <div id="list" class="related tab-pane fade">
                                                 <div class="row">
+                                                    {% for product in products.all %}
                                                     <div class="item col-md-12">
                                                         <div class="product-miniature item-one first-item">
                                                             <div class="row">
                                                                 <div class="col-md-4">
                                                                     <div class="thumbnail-container border">
-                                                                        <a href="product-detail.html">
-                                                                            <img class="img-fluid image-cover" src="{% static 'img/product/1.jpg' %}" alt="img">
-                                                                            <img class="img-fluid image-secondary" src="{% static 'img/product/22.jpg' %}" alt="img">
-                                                                        </a>
-                                                                    </div>
+                                                                         <a href="{% url 'products:detail' pk=product.id %}">
+                                                                    <!-- Birinchi rasm -->
+                                                                    <img class="img-fluid image-cover" src="{{ product.images.all.0.image.url }}" alt="img">
+                                                                    <!-- Ikkinchi rasm (agar bo'lsa) -->
+                                                                    {% if product.images.all|length > 1 %}
+                                                                        <img class="img-fluid image-secondary" src="{{ product.images.all.1.image.url }}" alt="img">
+                                                                    {% else %}
+                                                                        <img class="img-fluid image-secondary" src="{{ product.images.all.0.image.url }}" alt="img">
+                                                                    {% endif %}
+                                                                    </a>
+                                                                        </div>
                                                                 </div>
                                                                 <div class="col-md-8">
                                                                     <div class="product-description">
                                                                         <div class="product-groups">
                                                                             <div class="product-title">
-                                                                                <a href="product-detail.html">{% trans 'Nulla et justo non augue' %}</a>
+                                                                                <a href="{% url 'products:detail' pk=product.id %}">{{ product.title }}</a>
                                                                                 <span class="info-stock">
                                                                                     <i class="fa fa-check-square-o" aria-hidden="true"></i>
                                                                                     {% trans '' %}In Stock
                                                                                 </span>
                                                                             </div>
+
+                                                                        <!-- stars section -->
                                                                             <div class="rating">
                                                                                 <div class="star-content">
                                                                                     <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
                                                                                 </div>
+
                                                                             </div>
                                                                             <div class="product-group-price">
                                                                                 <div class="product-price-and-shipping">
-                                                                                    <span class="price">£28.08</span>
+                                                                                    <span class="price">$ {{ product.price }}</span>
                                                                                 </div>
                                                                             </div>
                                                                             <div class="discription">
-                                                                                {% blocktrans %}Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ultricies eget velit vitae bibendum. Cras condimentum libero
-                                                                                a lectus ultricies...{% endblocktrans %}
+                                                                                {{ product.description }}
                                                                             </div>
                                                                         </div>
                                                                         <div class="product-buttons d-flex">
                                                                             <form action="#" method="post" class="formAddToCart">
-                                                                                <a class="add-to-cart" href="#" data-button-action="add-to-cart">
+                                                                                <a class="add-to-cart" href="{% url 'basket:basket_add' product.id %}" data-button-action="add-to-cart">
                                                                                     <i class="fa fa-shopping-cart" aria-hidden="true"></i>{% trans '' %}Add to cart
                                                                                 </a>
                                                                             </form>
-                                                                            <a class="addToWishlist" href="#" data-rel="1" onclick="">
-                                                                                <i class="fa fa-heart" aria-hidden="true"></i>
-                                                                            </a>
-                                                                            <a href="#" class="quick-view hidden-sm-down" data-link-action="quickview">
-                                                                                <i class="fa fa-eye" aria-hidden="true"></i>
-                                                                            </a>
+{#                                                                            <a class="addToWishlist" href="#" data-rel="1" onclick="">#}
+{#                                                                                <i class="fa fa-heart" aria-hidden="true"></i>#}
+{#                                                                            </a>#}
+{#                                                                            <a href="#" class="quick-view hidden-sm-down" data-link-action="quickview">#}
+{#                                                                                <i class="fa fa-eye" aria-hidden="true"></i>#}
+{#                                                                            </a>#}
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="item col-md-12">
-                                                        <div class="product-miniature js-product-miniature item-one first-item">
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <div class="thumbnail-container border">
-                                                                        <a href="product-detail.html">
-                                                                            <img class="img-fluid image-cover" src="{% static 'img/product/2.jpg' %}" alt="img">
-                                                                            <img class="img-fluid image-secondary" src="{% static 'img/product/11.jpg' %}" alt="img">
-                                                                        </a>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-8">
-                                                                    <div class="product-description">
-                                                                        <div class="product-groups">
-                                                                            <div class="product-title">
-                                                                                <a href="product-detail.html">{% trans 'Nulla et justo non augue' %}</a>
-                                                                                <span class="info-stock">
-                                                                                    <i class="fa fa-check-square-o" aria-hidden="true"></i>
-                                                                                    In Stock
-                                                                                </span>
-                                                                            </div>
-                                                                            <div class="rating">
-                                                                                <div class="star-content">
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="product-group-price">
-                                                                                <div class="product-price-and-shipping">
-                                                                                    <span class="price">£31.08</span>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="discription">
-                                                                                {% blocktrans %}Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ultricies eget velit vitae bibendum. Cras condimentum libero
-                                                                                a lectus ultricies...{% endblocktrans %}
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="product-buttons d-flex">
-                                                                            <form action="#" method="post" class="formAddToCart">
-                                                                                <a class="add-to-cart" href="#" data-button-action="add-to-cart">
-                                                                                    <i class="fa fa-shopping-cart" aria-hidden="true"></i>Add to cart
-                                                                                </a>
-                                                                            </form>
-                                                                            <a class="addToWishlist" href="#" data-rel="1" onclick="">
-                                                                                <i class="fa fa-heart" aria-hidden="true"></i>
-                                                                            </a>
-                                                                            <a href="#" class="quick-view hidden-sm-down" data-link-action="quickview">
-                                                                                <i class="fa fa-eye" aria-hidden="true"></i>
-                                                                            </a>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="item col-md-12">
-                                                        <div class="product-miniature js-product-miniature item-one first-item">
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <div class="thumbnail-container border">
-                                                                        <a href="product-detail.html">
-                                                                            <img class="img-fluid image-cover" src="{% static 'img/product/3.jpg' %}" alt="img">
-                                                                            <img class="img-fluid image-secondary" src="{% static 'img/product/14.jpg' %}" alt="img">
-                                                                        </a>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-8">
-                                                                    <div class="product-description">
-                                                                        <div class="product-groups">
-                                                                            <div class="product-title">
-                                                                                <a href="product-detail.html">{% trans 'Nulla et justo non augue' %}</a>
-                                                                                <span class="info-stock">
-                                                                                    <i class="fa fa-check-square-o" aria-hidden="true"></i>
-                                                                                    In Stock
-                                                                                </span>
-                                                                            </div>
-                                                                            <div class="rating">
-                                                                                <div class="star-content">
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="product-group-price">
-                                                                                <div class="product-price-and-shipping">
-                                                                                    <span class="price">£20.08</span>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="discription">
-                                                                                {% blocktrans %}Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ultricies eget velit vitae bibendum. Cras condimentum libero
-                                                                                a lectus ultricies...{% endblocktrans %}
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="product-buttons d-flex">
-                                                                            <form action="#" method="post" class="formAddToCart">
-                                                                                <a class="add-to-cart" href="#" data-button-action="add-to-cart">
-                                                                                    <i class="fa fa-shopping-cart" aria-hidden="true"></i>{% trans 'Add to cart' %}
-                                                                                </a>
-                                                                            </form>
-                                                                            <a class="addToWishlist" href="#" data-rel="1" onclick="">
-                                                                                <i class="fa fa-heart" aria-hidden="true"></i>
-                                                                            </a>
-                                                                            <a href="#" class="quick-view hidden-sm-down" data-link-action="quickview">
-                                                                                <i class="fa fa-eye" aria-hidden="true"></i>
-                                                                            </a>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="item col-md-12">
-                                                        <div class="product-miniature js-product-miniature item-one first-item">
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <div class="thumbnail-container border">
-                                                                        <a href="product-detail.html">
-                                                                            <img class="img-fluid image-cover" src="{% static 'img/product/5.jpg' %}" alt="img">
-                                                                            <img class="img-fluid image-secondary" src="{% static 'img/product/11.jpg' %}" alt="img">
-                                                                        </a>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-8">
-                                                                    <div class="product-description">
-                                                                        <div class="product-groups">
-                                                                            <div class="product-title">
-                                                                                <a href="product-detail.html">{% trans 'Nulla et justo non augue' %}</a>
-                                                                                <span class="info-stock">
-                                                                                    <i class="fa fa-check-square-o" aria-hidden="true"></i>
-                                                                                    In Stock
-                                                                                </span>
-                                                                            </div>
-                                                                            <div class="rating">
-                                                                                <div class="star-content">
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="product-group-price">
-                                                                                <div class="product-price-and-shipping">
-                                                                                    <span class="price">£32.98</span>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="discription">
-                                                                                {% blocktrans %}Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ultricies eget velit vitae bibendum. Cras condimentum libero
-                                                                                a lectus ultricies...{% endblocktrans %}
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="product-buttons d-flex">
-                                                                            <form action="#" method="post" class="formAddToCart">
-                                                                                <a class="add-to-cart" href="#" data-button-action="add-to-cart">
-                                                                                    <i class="fa fa-shopping-cart" aria-hidden="true"></i>{% trans 'Add to cart' %}
-                                                                                </a>
-                                                                            </form>
-                                                                            <a class="addToWishlist" href="#" data-rel="1" onclick="">
-                                                                                <i class="fa fa-heart" aria-hidden="true"></i>
-                                                                            </a>
-                                                                            <a href="#" class="quick-view hidden-sm-down" data-link-action="quickview">
-                                                                                <i class="fa fa-eye" aria-hidden="true"></i>
-                                                                            </a>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="item col-md-12">
-                                                        <div class="product-miniature js-product-miniature item-one first-item">
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <div class="thumbnail-container border">
-                                                                        <a href="product-detail.html">
-                                                                            <img class="img-fluid image-cover" src="{% static 'img/product/8.jpg' %}" alt="img">
-                                                                            <img class="img-fluid image-secondary" src="{% static 'img/product/14.jpg' %}" alt="img">
-                                                                        </a>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-8">
-                                                                    <div class="product-description">
-                                                                        <div class="product-groups">
-                                                                            <div class="product-title">
-                                                                                <a href="product-detail.html">{% trans 'Nulla et justo non augue' %}</a>
-                                                                                <span class="info-stock">
-                                                                                    <i class="fa fa-check-square-o" aria-hidden="true"></i>
-                                                                                    In Stock
-                                                                                </span>
-                                                                            </div>
-                                                                            <div class="rating">
-                                                                                <div class="star-content">
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="product-group-price">
-                                                                                <div class="product-price-and-shipping">
-                                                                                    <span class="price">£34.54</span>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="discription">
-                                                                                {% blocktrans %}Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ultricies eget velit vitae bibendum. Cras condimentum libero
-                                                                                a lectus ultricies...{% endblocktrans %}
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="product-buttons d-flex">
-                                                                            <form action="#" method="post" class="formAddToCart">
-                                                                                <a class="add-to-cart" href="#" data-button-action="add-to-cart">
-                                                                                    <i class="fa fa-shopping-cart" aria-hidden="true"></i>{% trans 'Add to cart' %}
-                                                                                </a>
-                                                                            </form>
-                                                                            <a class="addToWishlist" href="#" data-rel="1" onclick="">
-                                                                                <i class="fa fa-heart" aria-hidden="true"></i>
-                                                                            </a>
-                                                                            <a href="#" class="quick-view hidden-sm-down" data-link-action="quickview">
-                                                                                <i class="fa fa-eye" aria-hidden="true"></i>
-                                                                            </a>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="item col-md-12">
-                                                        <div class="product-miniature js-product-miniature item-one first-item">
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <div class="thumbnail-container border">
-                                                                        <a href="product-detail.html">
-                                                                            <img class="img-fluid image-cover" src="{% static 'img/product/11.jpg' %}" alt="img">
-                                                                            <img class="img-fluid image-secondary" src="{% static 'img/product/12.jpg' %}" alt="img">
-                                                                        </a>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-8">
-                                                                    <div class="product-description">
-                                                                        <div class="product-groups">
-                                                                            <div class="product-title">
-                                                                                <a href="product-detail.html">{% trans 'Nulla et justo non augue' %}</a>
-                                                                                <span class="info-stock">
-                                                                                    <i class="fa fa-check-square-o" aria-hidden="true"></i>
-                                                                                    In Stock
-                                                                                </span>
-                                                                            </div>
-                                                                            <div class="rating">
-                                                                                <div class="star-content">
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="product-group-price">
-                                                                                <div class="product-price-and-shipping">
-                                                                                    <span class="price">£21.08</span>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="discription">
-                                                                                {% blocktrans %}Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ultricies eget velit vitae bibendum. Cras condimentum libero
-                                                                                a lectus ultricies...{% endblocktrans %}
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="product-buttons d-flex">
-                                                                            <form action="#" method="post" class="formAddToCart">
-                                                                                <a class="add-to-cart" href="#" data-button-action="add-to-cart">
-                                                                                    <i class="fa fa-shopping-cart" aria-hidden="true"></i>{% trans 'Add to cart' %}
-                                                                                </a>
-                                                                            </form>
-                                                                            <a class="addToWishlist" href="#" data-rel="1" onclick="">
-                                                                                <i class="fa fa-heart" aria-hidden="true"></i>
-                                                                            </a>
-                                                                            <a href="#" class="quick-view hidden-sm-down" data-link-action="quickview">
-                                                                                <i class="fa fa-eye" aria-hidden="true"></i>
-                                                                            </a>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="item col-md-12">
-                                                        <div class="product-miniature js-product-miniature item-one first-item">
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <div class="thumbnail-container border">
-                                                                        <a href="product-detail.html">
-                                                                            <img class="img-fluid image-cover" src="{% static 'img/product/13.jpg' %}" alt="img">
-                                                                            <img class="img-fluid image-secondary" src="{% static 'img/product/23.jpg' %}" alt="img">
-                                                                        </a>
-                                                                    </div>
-
-                                                                </div>
-                                                                <div class="col-md-8">
-                                                                    <div class="product-description">
-                                                                        <div class="product-groups">
-                                                                            <div class="product-title">
-                                                                                <a href="product-detail.html">{% trans 'Nulla et justo non augue' %}</a>
-                                                                                <span class="info-stock">
-                                                                                    <i class="fa fa-check-square-o" aria-hidden="true"></i>
-                                                                                    In Stock
-                                                                                </span>
-                                                                            </div>
-                                                                            <div class="rating">
-                                                                                <div class="star-content">
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="product-group-price">
-                                                                                <div class="product-price-and-shipping">
-                                                                                    <span class="price">£36.08</span>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="discription">
-                                                                                {% blocktrans %}Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ultricies eget velit vitae bibendum. Cras condimentum libero
-                                                                                a lectus ultricies...{% endblocktrans %}
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="product-buttons d-flex">
-                                                                            <form action="#" method="post" class="formAddToCart">
-                                                                                <a class="add-to-cart" href="#" data-button-action="add-to-cart">
-                                                                                    <i class="fa fa-shopping-cart" aria-hidden="true"></i>{% trans 'Add to cart' %}
-                                                                                </a>
-                                                                            </form>
-                                                                            <a class="addToWishlist" href="#" data-rel="1" onclick="">
-                                                                                <i class="fa fa-heart" aria-hidden="true"></i>
-                                                                            </a>
-                                                                            <a href="#" class="quick-view hidden-sm-down" data-link-action="quickview">
-                                                                                <i class="fa fa-eye" aria-hidden="true"></i>
-                                                                            </a>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="item col-md-12">
-                                                        <div class="product-miniature js-product-miniature item-one first-item">
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <div class="thumbnail-container border">
-                                                                        <a href="product-detail.html">
-                                                                            <img class="img-fluid image-cover" src="{% static 'img/product/26.jpg' %}" alt="img">
-                                                                            <img class="img-fluid image-secondary" src="{% static 'img/product/11.jpg' %}" alt="img">
-                                                                        </a>
-                                                                    </div>
-
-                                                                </div>
-                                                                <div class="col-md-8">
-                                                                    <div class="product-description">
-                                                                        <div class="product-groups">
-                                                                            <div class="product-title">
-                                                                                <a href="product-detail.html">{% trans 'Nulla et justo non augue' %}</a>
-                                                                                <span class="info-stock">
-                                                                                    <i class="fa fa-check-square-o" aria-hidden="true"></i>
-                                                                                    In Stock
-                                                                                </span>
-                                                                            </div>
-                                                                            <div class="rating">
-                                                                                <div class="star-content">
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="product-group-price">
-                                                                                <div class="product-price-and-shipping">
-                                                                                    <span class="price">£66.08</span>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="discription">
-                                                                                {% blocktrans %}Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ultricies eget velit vitae bibendum. Cras condimentum libero
-                                                                                a lectus ultricies...{% endblocktrans %}
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="product-buttons d-flex">
-                                                                            <form action="#" method="post" class="formAddToCart">
-                                                                                <a class="add-to-cart" href="#" data-button-action="add-to-cart">
-                                                                                    <i class="fa fa-shopping-cart" aria-hidden="true"></i>{% trans 'Add to cart' %}
-                                                                                </a>
-                                                                            </form>
-                                                                            <a class="addToWishlist" href="#" data-rel="1" onclick="">
-                                                                                <i class="fa fa-heart" aria-hidden="true"></i>
-                                                                            </a>
-                                                                            <a href="#" class="quick-view hidden-sm-down" data-link-action="quickview">
-                                                                                <i class="fa fa-eye" aria-hidden="true"></i>
-                                                                            </a>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="item col-md-12">
-                                                        <div class="product-miniature js-product-miniature item-one first-item">
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <div class="thumbnail-container border">
-                                                                        <a href="product-detail.html">
-                                                                            <img class="img-fluid image-cover" src="{% static 'img/product/8.jpg' %}" alt="img">
-                                                                            <img class="img-fluid image-secondary" src="{% static 'img/product/14.jpg' %}" alt="img">
-                                                                        </a>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-8">
-                                                                    <div class="product-description">
-                                                                        <div class="product-groups">
-                                                                            <div class="product-title">
-                                                                                <a href="product-detail.html">{% trans 'Nulla et justo non augue' %}</a>
-                                                                                <span class="info-stock">
-                                                                                    <i class="fa fa-check-square-o" aria-hidden="true"></i>
-                                                                                    In Stock
-                                                                                </span>
-                                                                            </div>
-                                                                            <div class="rating">
-                                                                                <div class="star-content">
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="product-group-price">
-                                                                                <div class="product-price-and-shipping">
-                                                                                    <span class="price">£34.54</span>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="discription">
-                                                                                {% blocktrans %}Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ultricies eget velit vitae bibendum. Cras condimentum libero
-                                                                                a lectus ultricies...{% endblocktrans %}
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="product-buttons d-flex">
-                                                                            <form action="#" method="post" class="formAddToCart">
-                                                                                <a class="add-to-cart" href="#" data-button-action="add-to-cart">
-                                                                                    <i class="fa fa-shopping-cart" aria-hidden="true"></i>{% trans 'Add to cart' %}
-                                                                                </a>
-                                                                            </form>
-                                                                            <a class="addToWishlist" href="#" data-rel="1" onclick="">
-                                                                                <i class="fa fa-heart" aria-hidden="true"></i>
-                                                                            </a>
-                                                                            <a href="#" class="quick-view hidden-sm-down" data-link-action="quickview">
-                                                                                <i class="fa fa-eye" aria-hidden="true"></i>
-                                                                            </a>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="item col-md-12">
-                                                        <div class="product-miniature js-product-miniature item-one first-item">
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <div class="thumbnail-container border">
-                                                                        <a href="product-detail.html">
-                                                                            <img class="img-fluid image-cover" src="{% static 'img/product/11.jpg' %}" alt="img">
-                                                                            <img class="img-fluid image-secondary" src="{% static 'img/product/12.jpg' %}" alt="img">
-                                                                        </a>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-8">
-                                                                    <div class="product-description">
-                                                                        <div class="product-groups">
-                                                                            <div class="product-title">
-                                                                                <a href="product-detail.html">{% trans 'Nulla et justo non augue' %}</a>
-                                                                                <span class="info-stock">
-                                                                                    <i class="fa fa-check-square-o" aria-hidden="true"></i>
-                                                                                    In Stock
-                                                                                </span>
-                                                                            </div>
-                                                                            <div class="rating">
-                                                                                <div class="star-content">
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="product-group-price">
-                                                                                <div class="product-price-and-shipping">
-                                                                                    <span class="price">£21.08</span>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="discription">
-                                                                                {% blocktrans %}Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ultricies eget velit vitae bibendum. Cras condimentum libero
-                                                                                a lectus ultricies...{% endblocktrans %}
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="product-buttons d-flex">
-                                                                            <form action="#" method="post" class="formAddToCart">
-                                                                                <a class="add-to-cart" href="#" data-button-action="add-to-cart">
-                                                                                    <i class="fa fa-shopping-cart" aria-hidden="true"></i>{% trans 'Add to cart' %}
-                                                                                </a>
-                                                                            </form>
-                                                                            <a class="addToWishlist" href="#" data-rel="1" onclick="">
-                                                                                <i class="fa fa-heart" aria-hidden="true"></i>
-                                                                            </a>
-                                                                            <a href="#" class="quick-view hidden-sm-down" data-link-action="quickview">
-                                                                                <i class="fa fa-eye" aria-hidden="true"></i>
-                                                                            </a>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="item col-md-12">
-                                                        <div class="product-miniature js-product-miniature item-one first-item">
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <div class="thumbnail-container border">
-                                                                        <a href="product-detail.html">
-                                                                            <img class="img-fluid image-cover" src="{% static 'img/product/13.jpg' %}" alt="img">
-                                                                            <img class="img-fluid image-secondary" src="{% static 'img/product/23.jpg' %}" alt="img">
-                                                                        </a>
-                                                                    </div>
-
-                                                                </div>
-                                                                <div class="col-md-8">
-                                                                    <div class="product-description">
-                                                                        <div class="product-groups">
-                                                                            <div class="product-title">
-                                                                                <a href="product-detail.html">{% trans 'Nulla et justo non augue' %}</a>
-                                                                                <span class="info-stock">
-                                                                                    <i class="fa fa-check-square-o" aria-hidden="true"></i>
-                                                                                    In Stock
-                                                                                </span>
-                                                                            </div>
-                                                                            <div class="rating">
-                                                                                <div class="star-content">
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="product-group-price">
-                                                                                <div class="product-price-and-shipping">
-                                                                                    <span class="price">£36.08</span>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="discription">
-                                                                                {% blocktrans %}Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ultricies eget velit vitae bibendum. Cras condimentum libero
-                                                                                a lectus ultricies...{% endblocktrans %}
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="product-buttons d-flex">
-                                                                            <form action="#" method="post" class="formAddToCart">
-                                                                                <a class="add-to-cart" href="#" data-button-action="add-to-cart">
-                                                                                    <i class="fa fa-shopping-cart" aria-hidden="true"></i>{% trans 'Add to cart' %}
-                                                                                </a>
-                                                                            </form>
-                                                                            <a class="addToWishlist" href="#" data-rel="1" onclick="">
-                                                                                <i class="fa fa-heart" aria-hidden="true"></i>
-                                                                            </a>
-                                                                            <a href="#" class="quick-view hidden-sm-down" data-link-action="quickview">
-                                                                                <i class="fa fa-eye" aria-hidden="true"></i>
-                                                                            </a>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="item col-md-12">
-                                                        <div class="product-miniature js-product-miniature item-one first-item">
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <div class="thumbnail-container border">
-                                                                        <a href="product-detail.html">
-                                                                            <img class="img-fluid image-cover" src="{% static 'img/product/26.jpg' %}" alt="img">
-                                                                            <img class="img-fluid image-secondary" src="{% static 'img/product/11.jpg' %}" alt="img">
-                                                                        </a>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-8">
-                                                                    <div class="product-description">
-                                                                        <div class="product-groups">
-                                                                            <div class="product-title">
-                                                                                <a href="#">{% trans 'Nulla et justo non augue' %}
-                                                                                </a>
-                                                                                <span class="info-stock">
-                                                                                    <i class="fa fa-check-square-o" aria-hidden="true"></i>
-                                                                                    In Stock
-                                                                                </span>
-                                                                            </div>
-                                                                            <div class="rating">
-                                                                                <div class="star-content">
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                    <div class="star"></div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="product-group-price">
-                                                                                <div class="product-price-and-shipping">
-                                                                                    <span class="price">£66.08</span>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="discription">
-                                                                                {% blocktrans %}Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ultricies eget velit vitae bibendum. Cras condimentum libero
-                                                                                a lectus ultricies...{% endblocktrans %}
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="product-buttons d-flex">
-                                                                            <form action="#" method="post" class="formAddToCart">
-                                                                                <a class="add-to-cart" href="#" data-button-action="add-to-cart">
-                                                                                    <i class="fa fa-shopping-cart" aria-hidden="true"></i>{% trans 'Add to cart' %}
-                                                                                </a>
-                                                                            </form>
-                                                                            <a class="addToWishlist" href="#" data-rel="1" onclick="">
-                                                                                <i class="fa fa-heart" aria-hidden="true"></i>
-                                                                            </a>
-                                                                            <a href="#" class="quick-view hidden-sm-down" data-link-action="quickview">
-                                                                                <i class="fa fa-eye" aria-hidden="true"></i>
-                                                                            </a>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                    {% endfor %}
                                                 </div>
                                             </div>
                                         </div>
 
                                         <!-- pagination -->
                                         <div class="pagination">
-                                            <div class="js-product-list-top ">
+                                            <div class="js-product-list-top">
                                                 <div class="d-flex justify-content-around row">
                                                     <div class="showing col col-xs-12">
-                                                        <span>{% trans 'SHOWING 1-3 OF 3 ITEM(S)' %}</span>
+                                                        {% if page_obj %}
+                                                            <span>
+                                                                {% trans 'SHOWING' %}
+                                                                {{ page_obj.start_index }}-{{ page_obj.end_index }}
+                                                                {% trans 'OF' %}
+                                                                {{ page_obj.paginator.count }}
+                                                                {% trans 'ITEM(S)' %}
+                                                            </span>
+                                                        {% endif %}
                                                     </div>
-                                                    <div class="page-list col col-xs-12">
-                                                        <ul>
-                                                            <li>
-                                                                <a rel="prev" href="#" class="previous disabled js-search-link">
-                                                                    {% trans 'Previous' %}
-                                                                </a>
-                                                            </li>
-                                                            <li class="current active">
-                                                                <a rel="nofollow" href="#" class="disabled js-search-link">
-                                                                    1
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a rel="nofollow" href="#" class="disabled js-search-link">
-                                                                    2
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a rel="nofollow" href="#" class="disabled js-search-link">
-                                                                    3
-                                                                </a>
-                                                            </li>
 
-                                                            <li>
-                                                                <a rel="next" href="#" class="next disabled js-search-link">
-                                                                    {% trans 'Next'%}
-                                                                </a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
+                                                    {% if page_obj %}
+                                                        <div class="page-list col col-xs-12">
+                                                            <ul>
+                                                                {% if page_obj.has_previous %}
+                                                                <li>
+                                                                    <a rel="prev" href="?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="previous js-search-link">
+                                                                        {% trans 'Previous' %}
+                                                                    </a>
+                                                                </li>
+                                                                {% endif %}
+
+                                                                {% for num in page_obj.paginator.page_range %}
+                                                                    {% if page_obj.number == num %}
+                                                                        <li class="current active">
+                                                                            <a rel="nofollow" href="?page={{ num }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="disabled js-search-link">
+                                                                                {{ num }}
+                                                                            </a>
+                                                                        </li>
+                                                                    {% else %}
+                                                                        <li>
+                                                                            <a rel="nofollow" href="?page={{ num }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">
+                                                                                {{ num }}
+                                                                            </a>
+                                                                        </li>
+                                                                    {% endif %}
+                                                                {% endfor %}
+
+                                                                {% if page_obj.has_next %}
+                                                                <li>
+                                                                    <a rel="next" href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="next js-search-link">
+                                                                        {% trans 'Next' %}
+                                                                    </a>
+                                                                </li>
+                                                                {% endif %}
+                                                            </ul>
+                                                        </div>
+                                                    {% endif %}
                                                 </div>
                                             </div>
                                         </div>
+
                                     </div>
 
                                     <!-- end col-md-9-1 -->
