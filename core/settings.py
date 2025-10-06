@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-9k)^mld)ms-+h!8n7*f%=^()ur5-!6gu%u8(=rq%*lset@9b#s'
+SECRET_KEY = config("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config("DEBUG")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -38,14 +39,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    'apps.pages',
-    'apps.blogs',
+    'apps.pages.apps.PagesConfig',
+    'apps.blogs.apps.BlogsConfig',
     'apps.products',
     'apps.accounts',
-    'apps.orders',
     'apps.basket',
     'apps.wishlist',
+    'apps.orders',
     'django_extensions',
     'ckeditor',
     'ckeditor_uploader',
@@ -55,8 +55,8 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -88,11 +88,14 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASS'),
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -120,7 +123,7 @@ LANGUAGE_CODE = 'en'
 LANGUAGES = (
     ('en', 'English'),
     ('uz', 'Uzbek'),
-    ('ru', 'Russian'),
+    ('ru', 'Russian')
 )
 LOCALE_PATHS = [BASE_DIR / 'locale', ]
 MODELTRANSLATION_DEFAULT_LANGUAGE = 'en'
@@ -149,6 +152,10 @@ CKEDITOR_CONFIGS = {
     },
 }
 
+
+LOGIN_REDIRECT_URL = '/'
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
@@ -158,10 +165,14 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'rustamov.mahmud.05@gmail.com'
-EMAIL_HOST_PASSWORD = 'swzk rcmr hoer xxnw'
+EMAIL_HOST_USER = 'ozodbekhoshimov53@gmail.com'
+EMAIL_HOST_PASSWORD = 'inse hnyf xscl jiov'
 
 BASKET_SESSION_ID = 'basket'
-SESSION_COOKIE_AGE = 86400
+SESSION_COOKIE_AGE = 86400  # 1 day
 SESSION_SAVE_EVERY_REQUEST = True
 
+try:
+    from .locale_settings import *
+except ImportError:
+    pass

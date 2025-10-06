@@ -1,3 +1,4 @@
+
 from django.http import JsonResponse
 from django.shortcuts import render
 
@@ -63,3 +64,5 @@ def basket_update(request, product_id):
         })
 
     return JsonResponse({'success': False, 'message': 'Invalid request method'})
+
+

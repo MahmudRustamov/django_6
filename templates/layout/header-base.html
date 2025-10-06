@@ -36,12 +36,13 @@
             <!-- search -->
             <div id="mobile_search" class="d-flex">
                 <div id="mobile_search_content">
-                    <form method="get" action="{% url 'products:search' %}">
-                            <input type="text" name="s" value="{{ search_query|default:'' }}" placeholder="Search products..." class="ui-autocomplete-input" autocomplete="off">
-                            <button type="submit">
-                                <i class="fa fa-search"></i>
-                            </button>
-                        </form>
+                    <form method="get" action="#">
+
+                        <input type="text" name="s" value="" placeholder="{% trans 'Search' %}">
+                        <button type="submit">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </form>
                 </div>
                 <div class="desktop_cart">
                     <div class="blockcart block-cart cart-preview tiva-toggle">
@@ -135,14 +136,17 @@
 
                     <!-- search and acount -->
                     <div class="col-sm-5 col-md-5 d-flex align-items-center justify-content-end" id="search_widget">
-                        <form method="get" action="#">
-
-                            <span role="status" aria-live="polite" class="ui-helper-hidden-accessible"></span>
-                            <input type="text" name="s" value="" placeholder="Search" class="ui-autocomplete-input" autocomplete="off">
+                        <form method="get" action="{% if search_type == 'blogs' %}{% url 'blogs:search' %}{% else %}{% url 'products:search' %}{% endif %}">
+                            <input type="text"
+                                   name="s"
+                                   value="{{ search_query|default:'' }}"
+                                   placeholder="{% if search_type == 'blogs' %}Search blogs...{% else %}Search products...{% endif %}"
+                                   autocomplete="off">
                             <button type="submit">
                                 <i class="fa fa-search"></i>
                             </button>
                         </form>
+
 
                         <div id="block_myaccount_infos" class="hidden-sm-down dropdown">
                             <div class="myaccount-title ">

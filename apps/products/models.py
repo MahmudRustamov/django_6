@@ -129,23 +129,36 @@ class DealOfTheDayModel(BaseModel):
             return self.end_time - now
         return None
 
+    @property
+    def discount_percent(self):
+        if self.product.price and self.deal_price < self.product.price:
+            return round((self.product.price - self.deal_price) / self.product.price * 100)
+        return 0
+
     class Meta:
         verbose_name = 'deal'
         verbose_name_plural = 'deals'
 
 
 class CommentModel(BaseModel):
+    product = models.ForeignKey(
+        ProductModel,
+        on_delete=models.CASCADE,
+        related_name='comments',
+        null=True,
+        blank=True
+    )
+
     name = models.CharField(max_length=128)
     email = models.EmailField()
     comment = models.TextField()
 
     def __str__(self):
-        return self.email
+        return f"{self.name} - {self.product.title}"
 
     class Meta:
         verbose_name = 'comment'
         verbose_name_plural = 'comments'
-
 
 
 

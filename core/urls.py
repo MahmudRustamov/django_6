@@ -31,9 +31,12 @@ urlpatterns += i18n_patterns(
     path('blogs/', include('apps.blogs.urls'), name='blogs'),
     path('products/', include('apps.products.urls'), name='products'),
     path('accounts/', include('apps.accounts.urls'), name='accounts'),
-    path('basket/', include('apps.basket.urls', namespace='basket')),
-    path('orders/', include('apps.orders.urls', namespace='orders')),
-    path('wishlist/', include('apps.wishlist.urls', namespace='wishlist')),
+    path('basket/',include('apps.basket.urls'),name='basket'),
+    path('wishlist/', include('apps.wishlist.urls'), name='wishlist'),
+    path('orders/', include('apps.orders.urls'), name='orders'),
+
+
+
 )
 
 if settings.DEBUG:
