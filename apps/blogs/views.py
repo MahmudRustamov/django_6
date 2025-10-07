@@ -54,7 +54,7 @@ class BlogSearchView(ListView):
 class BlogListView(ListView):
     template_name = 'blogs/blog-list-sidebar-left.html'
     context_object_name = "blogs"
-    paginate_by = 1
+    paginate_by = 3
 
     def get_queryset(self):
         return BlogModel.objects.filter(status=BlogModel.BlogStatus.PUBLISHED)
@@ -65,7 +65,7 @@ class BlogListView(ListView):
         context["tags"] = BlogTagModel.objects.all()
         context["recent_blogs"] = BlogModel.objects.filter(
             status=BlogModel.BlogStatus.PUBLISHED
-        ).order_by('-created_at')[:5]
+        ).order_by('-created_at')[:2]
         context["search_type"] = "blogs"
         return context
 
@@ -95,14 +95,14 @@ class BlogDetailView(DetailView):
         context["related_blogs"] = related_blogs
         context["comments"] = comments
 
-        # Sidebar ma’lumotlari
+
         context["parent_categories"] = BlogCategoryModel.objects.filter(parent__isnull=True)
         context["tags"] = BlogTagModel.objects.all()
         context["recent_blogs"] = BlogModel.objects.filter(
             status=BlogModel.BlogStatus.PUBLISHED
-        ).order_by('-created_at')[:5]
+        ).order_by('-created_at')[:3]
 
-        # Header search uchun
+
         context["search_type"] = "blogs"
 
         return context

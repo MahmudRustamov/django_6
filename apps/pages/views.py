@@ -4,7 +4,7 @@ from django.utils import timezone
 
 from apps.pages.forms import ContactForm
 from apps.pages.models import BannerModel
-from apps.products.models import DealOfTheDayModel
+from apps.products.models import DealOfTheDayModel, ProductCategoryModel
 
 
 def home_view(request):
@@ -14,7 +14,7 @@ def home_view(request):
         start_time__lte=now,
         end_time__gte=now
     ).select_related("product")
-
+    categories = ProductCategoryModel.objects.all()[:10]
 
     deals_list = list(deals)
     if deals_list:
@@ -22,7 +22,8 @@ def home_view(request):
 
     context = {
         'deals': deals_list,
-        'banners': banners
+        'banners': banners,
+        'categories':categories,
     }
     return render(request, 'pages/home3.html', context)
 
