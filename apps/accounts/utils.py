@@ -1,11 +1,11 @@
-from django.conf import settings
 from django.core.mail import EmailMessage
+from django.conf import settings
 from django.template.loader import render_to_string
-from django.urls import reverse
-from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.urls import reverse
+from anymail.exceptions import AnymailAPIError
 from .tokens import account_activation_token
-
 
 def send_email_confirmation(user, request):
     token = account_activation_token.make_token(user)
@@ -24,8 +24,12 @@ def send_email_confirmation(user, request):
     email = EmailMessage(
         subject=subject,
         body=html_message,
-        from_email=settings.EMAIL_HOST_USER,
+        from_email=settings.DEFAULT_FROM_EMAIL,
         to=[user.email],
     )
     email.content_subtype = 'html'
-    email.send()
+
+    try:
+        email.send()
+    except AnymailAPIError as e:
+        print("Error while sending the email:", e)
