@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'ckeditor',
     'ckeditor_uploader',
+    "anymail",
 ]
 
 MIDDLEWARE = [
@@ -161,12 +162,11 @@ LOGIN_REDIRECT_URL = '/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = config("EMAIL_USER")
-EMAIL_HOST_PASSWORD = config("EMAIL_PASS")
+EMAIL_BACKEND = 'anymail.backends.brevo.EmailBackend'
+ANYMAIL = {
+    "BREVO_API_KEY": config("BREVO_API_KEY"),  # .env fayldan olingan API key
+}
+DEFAULT_FROM_EMAIL = config("EMAIL_USER")
 
 BASKET_SESSION_ID = 'basket'
 SESSION_COOKIE_AGE = 86400  # 1 day
