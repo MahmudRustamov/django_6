@@ -172,7 +172,7 @@ BASKET_SESSION_ID = 'basket'
 SESSION_COOKIE_AGE = 86400  # 1 day
 SESSION_SAVE_EVERY_REQUEST = True
 
-try:
-    from .locale_settings import *
-except ImportError:
-    pass
+# try:
+#     from .locale_settings import *
+# except ImportError:
+#     pass
